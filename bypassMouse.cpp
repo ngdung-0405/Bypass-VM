@@ -62,7 +62,7 @@ int main() {
     srand(static_cast<unsigned int>(time(NULL)));  // Seed random
     int screenWidth = GetSystemMetrics(SM_CXSCREEN);
     int screenHeight = GetSystemMetrics(SM_CYSCREEN);
-    int dialogCheckInterval = 0;
+    DWORD lastDialogCheckTime = GetTickCount();  // Thời gian check dialog lần cuối
 
     std::cout << "Running mouse simulator. Press Ctrl+C to stop." << std::endl;
 
@@ -85,11 +85,11 @@ int main() {
             Sleep(rand() % 401 + 100);  // Delay 100-500ms
         }
 
-        // Kiểm tra dialog mỗi 5 giây
-        dialogCheckInterval++;
-        if (dialogCheckInterval >= 5) {
+        // Kiểm tra dialog mỗi 2.5 giây (dựa trên thời gian thực)
+        DWORD currentTime = GetTickCount();
+        if (currentTime - lastDialogCheckTime >= 2500) {  // 2500ms = 2.5 giây
             HandleDialog();
-            dialogCheckInterval = 0;
+            lastDialogCheckTime = currentTime;
         }
     }
     return 0;
